@@ -88,7 +88,20 @@ def create_picture():
 
 @app.route("/picture/<int:id>", methods=["PUT"])
 def update_picture(id):
-    pass
+    if not request.is_json:
+        return jsonify({"error": "Request must be in JSON format"}), 400
+    new_picture = request.json
+    if not new_picture:
+        return jsonify({"error": "Picture data is empty"}), 400
+    try:
+        for picture in data:
+            if picture['id'] == new_picture['id']:
+                picture.update(new_picture)
+                return jsonify(picture), 200
+        return {"message": "picture not found"}, 404
+    except NameError:
+        return {"message": "Internal server error"}, 500 
+
 
 ######################################################################
 # DELETE A PICTURE
